@@ -1,5 +1,8 @@
 <?php
     session_start();
+    include('config.php');
+    
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -17,7 +20,7 @@
 
 
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Roboto:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
-
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css' />
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/vendor/icofont/icofont.min.css" rel="stylesheet">
   <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
@@ -62,129 +65,78 @@
         </div>
         <div class="col">
             <div class="row">
+                <?php
+                    $sql = "SELECT * FROM cars";
+                    $result = mysqli_query($conn, $sql);
+                    $result_per_page = 6;
+                    $number_of_page = ceil(mysqli_num_rows($result) / $result_per_page);
+                    $current_page = 1;
+                    if(isset($_GET['page'])){
+                        if($_GET['page'] < 1) $current_page = 1;
+                        else if($_GET['page'] > $number_of_page) $current_page = $number_of_page;
+                        else $current_page = $_GET['page'];
+                    }
+                    $this_page_first_result = ($current_page-1)*$result_per_page;
+
+                    $sql = 'SELECT * FROM cars  LIMIT ' . $this_page_first_result . ',' .  $result_per_page .';';
+                    $page_result = mysqli_query($conn, $sql);
+                    if(mysqli_num_rows($page_result) > 0){
+                        while($row = mysqli_fetch_array($page_result)) { 
+                ?>
                 <div class="col-12 col-md-6 col-lg-4">
                     <div class="card">
-                        <img class="card-img-top" src="assets/img/luxa20.png" alt="Card image cap">
+                        <img class="card-img-top" src="<?php echo $row['image'];?>" alt="Card image cap">
                         <div class="card-body">
-                            <h4 class="card-title"><a href="product.html" title="View Product">VINFAST LUX A2.0</a></h4>
+                            <h4 class="card-title"><a href="product.html" title="View Product"><?php echo $row['name'];?></a></h4>
                             <p class="card-text">
                                 <ul>
-                                    <li>Hỗ trợ mua xe trả góp 70-80% giá trị xe, thời gian vay tối đa 8 năm, thủ tục nhanh chóng. </li>
+                                    <li><?php echo $row['description'];?> </li>
                                 </ul>
                             </p>
                             <div class="row">
-                                <div class="col">
-                                    <p class="btn btn-danger btn-block">99.00 $</p>
+                                <div class="col-md-5 col-lg-6">
+                                    <p class="btn btn-danger btn-block"><?php echo $row['price'];?>$</p>
                                 </div>
-                                <div class="col">
-                                    <a href="#" class="btn btn-success btn-block" style="width:109px;">Add to cart</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6 col-lg-4">
-                    <div class="card">
-                        <img class="card-img-top" src="https://dummyimage.com/600x400/55595c/fff" alt="Card image cap">
-                        <div class="card-body">
-                            <h4 class="card-title"><a href="product.html" title="View Product">Product title</a></h4>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <div class="row">
-                                <div class="col">
-                                    <p class="btn btn-danger btn-block">99.00 $</p>
-                                </div>
-                                <div class="col">
-                                    <a href="#" class="btn btn-success btn-block" style="width:109px;">Add to cart</a>
+                                <div class="col-md-7 col-lg-6">
+                                    <button type="button" onclick="addToCart(<?php echo $row['id']?>)" class="btn btn-success btn-block" style="width:109px;">Add to cart</button>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-12 col-md-6 col-lg-4">
-                    <div class="card">
-                        <img class="card-img-top" src="https://dummyimage.com/600x400/55595c/fff" alt="Card image cap">
-                        <div class="card-body">
-                            <h4 class="card-title"><a href="product.html" title="View Product">Product title</a></h4>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <div class="row">
-                                <div class="col">
-                                    <p class="btn btn-danger btn-block">99.00 $</p>
-                                </div>
-                                <div class="col">
-                                    <a href="#" class="btn btn-success btn-block" style="width:109px;">Add to cart</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6 col-lg-4">
-                    <div class="card">
-                        <img class="card-img-top" src="https://dummyimage.com/600x400/55595c/fff" alt="Card image cap">
-                        <div class="card-body">
-                            <h4 class="card-title"><a href="product.html" title="View Product">Product title</a></h4>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <div class="row">
-                                <div class="col">
-                                    <p class="btn btn-danger btn-block">99.00 $</p>
-                                </div>
-                                <div class="col">
-                                    <a href="#" class="btn btn-success btn-block" style="width:109px;">Add to cart</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6 col-lg-4">
-                    <div class="card">
-                        <img class="card-img-top" src="https://dummyimage.com/600x400/55595c/fff" alt="Card image cap">
-                        <div class="card-body">
-                            <h4 class="card-title"><a href="product.html" title="View Product">Product title</a></h4>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <div class="row">
-                                <div class="col">
-                                    <p class="btn btn-danger btn-block">99.00 $</p>
-                                </div>
-                                <div class="col">
-                                    <a href="#" class="btn btn-success btn-block" style="width:109px;">Add to cart</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12 col-md-6 col-lg-4">
-                    <div class="card">
-                        <img class="card-img-top" src="https://dummyimage.com/600x400/55595c/fff" alt="Card image cap">
-                        <div class="card-body">
-                            <h4 class="card-title"><a href="product.html" title="View Product">Product title</a></h4>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <div class="row">
-                                <div class="col">
-                                    <p class="btn btn-danger btn-block">99.00 $</p>
-                                </div>
-                                <div class="col">
-                                    <a href="#" class="btn btn-success btn-block" style="width:109px;">Add to cart</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-12">
+                
+                <?php 
+                        }
+                    }
+                    $conn->close();   
+                ?>
+                
+                <div class="col-10">
                     <nav aria-label="...">
                         <ul class="pagination">
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#" tabindex="-1">Previous</a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item active">
-                                <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
-                            </li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
                             <li class="page-item">
-                                <a class="page-link" href="#">Next</a>
+                                <a class="page-link" href="sanpham.php?page=<?php echo $current_page-1;?>" tabindex="-1">Previous</a>
+                            </li>
+                            <?php
+                            
+                            for ($page=1; $page <= $number_of_page; $page++) { 
+                                if($page == $current_page) {
+                            
+                                echo '<li class="page-item active"><a class="page-link" href="sanpham.php?page='. $page . '">' . $page. '</a></li>';
+                        
+                                } else {
+                                    echo '<li class="page-item"><a class="page-link" href="sanpham.php?page='.$page.'">'.$page.'</a></li>';
+                                }
+                            }
+                            ?>
+                            <li class="page-item">
+                                <a class="page-link" href="sanpham.php?page=<?php echo $current_page+1;?>">Next</a>
                             </li>
                         </ul>
                     </nav>
                 </div>
+                
+                
             </div>
         </div>
 
@@ -192,5 +144,21 @@
 </div>
 
 <?php include("footer.php") ?>
+<script src="assets/vendor/jquery/jquery.min.js"></script>
+<script>
+    function addToCart(pid) {
+      $.ajax({
+        url: 'XLcart.php',
+        method: 'get',
+        data: {
+          pid,
+          action : 'add'
+        },
+        success: function(response) {
+          $("#cart-item").html(response);
+        }
+      });
+    }
+</script>
 </body>
 </html>

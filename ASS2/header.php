@@ -69,6 +69,17 @@
               <li><a href="login.php" <?php if(!isset($_SESSION['type_login'])){ echo "style=\"display:none\"";} ?> ><i class="icofont-logout"></i> ĐĂNG XUẤT </a></li>
             </ul>
           </li>
+          <li>
+          <li>
+        <a href="cart.php" class="twitter"><i class="icofont-cart"></i> <span id="cart-item" class="badge badge-danger">
+                        <?php 
+                        if(isset($_SESSION['cart-item'])){
+                            echo count($_SESSION['cart-item']);
+                        } else echo '0';
+                        ?>
+        </span></a>
+        </li>
+          </li>
         </ul>
 
 	
